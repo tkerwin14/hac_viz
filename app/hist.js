@@ -20,9 +20,8 @@ $(document).ready(function() {
 
   d3.csv("data/ths.csv", function(data) {
     measurename = "HAI_1_SIR";
-    measurescore = "Measure.Score.UW." + measurename;
-    measurefinal = "Measure.Score." + measurename;
-    drawHist(data, measurename, 'Cleaned.Score');
+    measurescore = "Measure.Score." + measurename;
+    drawHist(data, measurename, 'Cleaned.Score.UW');
 
     d3.select("#z-box")
       .on('click', function() {
@@ -36,9 +35,9 @@ $(document).ready(function() {
       d3.select("#win-box")
         .on("click", function() {
             if (d3.select("#win-box").property("checked")) {
-              drawHist(data, measurename, measurefinal);
+              drawHist(data, measurename, "Cleaned.Score");
             } else {
-              drawHist(data, measurename, measurescore);
+              drawHist(data, measurename, "Cleaned.Score.UW");
             }
         });
   });
@@ -60,8 +59,8 @@ $(document).ready(function() {
 
     yScale.domain([0, d3.max(bins, function(b) { return b.length;})]);
 
-    oneSDAbove = Number(mean_d["Cleaned.Score.FUN1"]) + Number(mean_d["Cleaned.Score.FUN2"])
-    oneSDBelow = Number(mean_d["Cleaned.Score.FUN1"]) - Number(mean_d["Cleaned.Score.FUN2"])
+    oneSDAbove = Number(mean_d["Cleaned.Score.mean"]) + Number(mean_d["Cleaned.Score.sd"])
+    oneSDBelow = Number(mean_d["Cleaned.Score.mean"]) - Number(mean_d["Cleaned.Score.sd"])
 
     var barsCont = svg.selectAll("g.bar")
                       .data(bins, function(b) { return b.id});
@@ -122,7 +121,7 @@ $(document).ready(function() {
       d3.select("#mean-box")
         .on("click", function() {
           if (d3.select("#mean-box").property("checked")) {
-              writeLine("Cleaned.Score.FUN1", "mean-line");
+              writeLine("Cleaned.Score.mean", "mean-line");
             } else {
               svg.select(".mean-line").remove();
             }
@@ -144,10 +143,10 @@ $(document).ready(function() {
       d3.select("#w-box")
         .on("click", function() {
           if (d3.select("#w-box").property("checked")) {
-            writeLine("Measure.Score.5%", "winsor-line");
-            writeLine("Measure.Score.95%", "winsor-line");
+            writeLine("Cleaned.Score.UW.5%", "winsor-line");
+            writeLine("Cleaned.Score.UW.95%", "winsor-line");
           } else {
-            svg.select("line").remove();
+            svg.selectAll("line").remove();
           }
         });
 
